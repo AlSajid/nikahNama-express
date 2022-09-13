@@ -1,0 +1,23 @@
+{
+  "name": "nikah-blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "nodemon index.js"
+  },
+  "author": "Al Sajid",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "eccrypto": "^1.1.6",
+    "elliptic": "^6.5.4",
+    "express": "^4.18.1",
+    "gun": "^0.2020.1238",
+    "node-fetch": "^3.2.6",
+    "nodemon": "^2.0.19"
+  }
+}
