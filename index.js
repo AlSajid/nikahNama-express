@@ -15,7 +15,9 @@ const nikahNama = new Blockchain();
 const backup = Gun().get("blockchain");
 
 backup.once(function (data) {
-  nikahNama.chain = JSON.parse(data?.nikahNama);
+  if (data) {
+    nikahNama.chain = JSON.parse(data?.nikahNama);
+  }
 });
 
 function updateBackup() {
@@ -48,4 +50,3 @@ const server = app.listen(port, () => {
 });
 
 Gun({ web: server });
-
