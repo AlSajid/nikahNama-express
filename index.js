@@ -11,12 +11,13 @@ app.use(express.json());
 app.use(Gun.serve);
 
 const nikahNama = new Blockchain();
-
 const backup = Gun().get("blockchain");
 
 backup.once(function (data) {
-  if (data) {
-    nikahNama.chain = JSON.parse(data?.nikahNama);
+  if (data.nikahNama) {
+    nikahNama.chain = JSON.parse(data.nikahNama);
+  } else {
+    backup.put({ nikahNama: JSON.stringify(nikahNama.chain) });
   }
 });
 
@@ -43,6 +44,12 @@ app.post("/addBlock", (request, response) => {
   nikahNama.addBlock(new Block(request.body));
   updateBackup();
   response.json("done");
+});
+
+app.get("/reset", (request, response) => {
+  nikahNama.chain = [];
+  backup.put({});
+  response.json("cleared");
 });
 
 const server = app.listen(port, () => {

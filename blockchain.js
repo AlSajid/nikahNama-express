@@ -2,7 +2,6 @@ import sha256 from "crypto-js/sha256.js";
 import pkg from "elliptic";
 const { ec } = pkg;
 
-
 const myKey = ec("secp256k1").keyFromPrivate(
   "292ab625ec8c092b82ccf81a88728e4e78f6132dceb80fac72cee2e2d69006e4"
 );
@@ -54,14 +53,13 @@ export class Block {
 export class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
-    this.difficulty = 1;
   }
 
   createGenesisBlock() {
     const genesisBlock = new Block({
-      groom: "Adam",
-      bride: "Hawa",
-      witness: "Allah",
+      groom: "হযরত আদম (আ.)",
+      bride: "হযরত হাওয়া (আ.)",
+      witness: "আল্লাহ",
     });
     genesisBlock.hash = genesisBlock.calculateHash();
     return genesisBlock;
@@ -73,8 +71,6 @@ export class Blockchain {
 
   addBlock(newBlock) {
     newBlock.previousHash = this.getLatestBlock().hash;
-    newBlock.hash = newBlock.calculateHash();
-    newBlock.mineBlocks(this.difficulty);
     newBlock.signBlock(myKey);
     this.chain.push(newBlock);
   }
@@ -104,4 +100,3 @@ export class Blockchain {
     return true;
   }
 }
-
