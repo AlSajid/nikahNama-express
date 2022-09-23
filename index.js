@@ -41,7 +41,6 @@ app.get("/backup", (request, response) => {
 });
 
 app.post("/addBlock", (request, response) => {
-
   if (nikahNama.addBlock(request.body)) {
     updateBackup();
     response.json("added");
@@ -50,14 +49,15 @@ app.post("/addBlock", (request, response) => {
   }
 });
 
-app.get("/reset", (request, response) => {
-  nikahNama.chain = [];
-  backup.put({});
-  response.json("cleared");
-});
-
 const server = app.listen(port, () => {
   console.log(`Nikahnama listening on port ${port}`);
+});
+
+app.get("/reset", (request, response) => {
+  // nikahNama.chain = [];
+  backup.put({});
+  response.json("cleared");
+
 });
 
 Gun({ web: server });
