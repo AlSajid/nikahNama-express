@@ -6,73 +6,54 @@ const myKey = ec("secp256k1").keyFromPrivate(
   "292ab625ec8c092b82ccf81a88728e4e78f6132dceb80fac72cee2e2d69006e4"
 );
 
-const myPublicKey = myKey.getPublic("hex");
-
-export class Block {
-  constructor(data) {
-    this.previousHash;
-    this.timestamp = new Date();
-    this.data = data;
-    this.hash = this.hash;
-    this.signature = this.sign;
-  }
-
-  calculateHash() {
-    return sha256(
-      this.nonce +
-        this.previousHash +
-        this.timestamp +
-        JSON.stringify(this.data)
-    ).toString();
-  }
-
-  signBlock(key) {
-    const sign = key.sign(this.hash, "base64");
-    this.signature = sign.toDER("hex");
-  }
-
-  mineBlocks(difficulty) {
-    const started = new Date().getTime();
-
-    while (
-      this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("1")
-    ) {
-      this.nonce++;
-      this.hash = this.calculateHash();
-      console.log(this.hash);
-    }
-
-    console.log(
-      "Mining Completed in " +
-        (new Date().getTime() - started) +
-        " milliseconds"
-    );
-  }
-}
-
 export class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
-  }
-
-  createGenesisBlock() {
-    const genesisBlock = new Block({
-      groom: "হযরত আদম (আ.)",
-      bride: "হযরত হাওয়া (আ.)",
-      witness: "আল্লাহ",
-    });
-    genesisBlock.hash = genesisBlock.calculateHash();
-    return genesisBlock;
   }
 
   getLatestBlock() {
     return this.chain[this.chain.length - 1];
   }
 
+  calculateHash(block) {
+    return sha256(
+      JSON.stringify(block.data) + block.nonce + block.timestamp
+    ).toString();
+  }
+
+  createGenesisBlock() {
+    const genesisBlock = {
+      data: {
+        groom: { name_of_national: "হযরত আদম (আ.)" },
+        bride: { name_of_national: "হযরত হাওয়া (আ.)" },
+        witness: { name_of_national: "আল্লাহ" },
+      },
+    };
+    const hash = this.calculateHash(genesisBlock);
+    return { ...genesisBlock, hash };
+  }
+
+  checkSignature(block) {
+    const myKey =
+      "043c80518c700de299c4f528d67230aeb8eb28a82c13fd7d27bfc45aca23da32e152251e5ef6801fccc1580783ac287640d9aff65508635156223befafc62736ad";
+    const publicKey = ec("secp256k1").keyFromPublic(myKey, "hex");
+    return publicKey.verify(block.hash, block.signature);
+  }
+
   addBlock(newBlock) {
-    newBlock.previousHash = this.getLatestBlock().hash;
-    newBlock.signBlock(myKey);
-    this.chain.push(newBlock);
+    // add block only if it has valid hash and signature
+    if (
+      this.calculateHash(newBlock) === newBlock.hash &&
+      this.checkSignature(newBlock)
+    ) {
+      newBlock.previousHash = this.getLatestBlock().hash;
+      this.checkSignature(newBlock);
+
+      this.chain.push(newBlock);
+      return true;
+    }
+
+    return false;
   }
 
   isValid() {
@@ -86,16 +67,6 @@ export class Blockchain {
       if (currentBlock.previousHash !== previousBlock.hash) {
         return false;
       }
-
-      if (!currentBlock.signature || currentBlock.signature.length === 0) {
-        return false;
-      }
-
-      console.log(currentBlock.signature);
-      // const publicKey = ec("secp256k1").keyFromPublic(currentBlock.signature, 'hex');
-      // if (!publicKey.verify(currentBlock.hash, this.signature)) {
-      //   return false;
-      // }
     }
     return true;
   }
