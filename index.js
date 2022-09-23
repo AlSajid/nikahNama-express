@@ -13,13 +13,13 @@ app.use(Gun.serve);
 const nikahNama = new Blockchain();
 const backup = Gun().get("blockchain");
 
-// backup.once(function (data) {
-//   if (data.nikahNama) {
-//     nikahNama.chain = JSON.parse(data.nikahNama);
-//   } else {
-//     backup.put({ nikahNama: JSON.stringify(nikahNama.chain) });
-//   }
-// });
+backup.once(function (data) {
+  if (data.nikahNama) {
+    nikahNama.chain = JSON.parse(data.nikahNama);
+  } else {
+    backup.put({ nikahNama: JSON.stringify(nikahNama.chain) });
+  }
+});
 
 function updateBackup() {
   backup.put({ nikahNama: JSON.stringify(nikahNama.chain) });
