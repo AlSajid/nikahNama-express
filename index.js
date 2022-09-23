@@ -20,7 +20,7 @@ backup.once(function (data) {
     backup.put({ nikahNama: JSON.stringify(nikahNama.chain) });
   }
 });
-
+// updateBackup();
 function updateBackup() {
   backup.put({ nikahNama: JSON.stringify(nikahNama.chain) });
   console.log("backup updated");
