@@ -1,5 +1,6 @@
 import sha256 from "crypto-js/sha256.js";
 import pkg from "elliptic";
+import { response } from "express";
 const { ec } = pkg;
 
 const myKey = ec("secp256k1").keyFromPrivate(
@@ -54,6 +55,14 @@ export class Blockchain {
     }
 
     return false;
+  }
+
+  search(nid) {
+    return this.chain.filter((block) => {
+      return (
+        block.data.groom.nid_number == nid || block.data.bride.nid_number == nid
+      );
+    });
   }
 
   isValid() {

@@ -49,15 +49,19 @@ app.post("/addBlock", (request, response) => {
   }
 });
 
-const server = app.listen(port, () => {
-  console.log(`Nikahnama listening on port ${port}`);
+app.post("/lookUp", (request, response) => {
+  const {person} = request.body;
+  response.json(nikahNama.search(person));
 });
 
+
 app.get("/reset", (request, response) => {
-  // nikahNama.chain = [];
   backup.put({});
   response.json("cleared");
+});
 
+const server = app.listen(port, () => {
+  console.log(`Nikahnama listening on port ${port}`);
 });
 
 Gun({ web: server });
