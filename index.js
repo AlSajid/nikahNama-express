@@ -11,7 +11,12 @@ app.use(express.json());
 app.use(Gun.serve);
 
 const nikahNama = new Blockchain();
-const backup = Gun().get("blockchain");
+const backup = Gun({
+  peers: [
+    "https://nikahnama.onrender.com/gun",
+    "https://odd-stockings-newt.cyclic.app/gun",
+  ],
+}).get("blockchain");
 
 backup.once(function (data) {
   if (data.nikahNama) {
@@ -63,10 +68,4 @@ const server = app.listen(port, () => {
   console.log(`Nikahnama listening on port ${port}`);
 });
 
-Gun({
-  web: server,
-  peers: [
-    "https://nikahnama.onrender.com/gun",
-    "https://odd-stockings-newt.cyclic.app/gun",
-  ],
-});
+Gun({ web: server });
