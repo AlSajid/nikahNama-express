@@ -7,7 +7,7 @@ import enableWs from "express-ws";
 // var WebSocketClient = require("websocket").client;
 import WebSocketClient from "websocket";
 
-const client = WebSocketClient.client;
+// const client = WebSocketClient.client;
 
 const app = express();
 const port = 5000;
@@ -27,9 +27,9 @@ fs.readFile("backup.nk", "utf8", (error, data) => {
   }
 });
 
-client.on("connectFailed", function (error) {
-  console.log("Connect Error: " + error.toString());
-});
+// client.on("connectFailed", function (error) {
+//   console.log("Connect Error: " + error.toString());
+// });
 
 const backup = () => {
   let encrypted = encryption.encrypt(JSON.stringify(nikahNama.chain));
