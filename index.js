@@ -11,12 +11,7 @@ app.use(express.json());
 app.use(Gun.serve);
 
 const nikahNama = new Blockchain();
-const backup = Gun({
-  peers: [
-    "https://nikahnama.onrender.com/gun",
-    "https://odd-stockings-newt.cyclic.app/gun",
-  ],
-}).get("blockchain");
+const backup = Gun().get("blockchain");
 
 backup.once(function (data) {
   if (data.nikahNama) {
