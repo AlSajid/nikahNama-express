@@ -50,10 +50,9 @@ app.post("/addBlock", (request, response) => {
 });
 
 app.post("/lookUp", (request, response) => {
-  const {person} = request.body;
+  const { person } = request.body;
   response.json(nikahNama.search(person));
 });
-
 
 app.get("/reset", (request, response) => {
   backup.put({});
@@ -64,4 +63,10 @@ const server = app.listen(port, () => {
   console.log(`Nikahnama listening on port ${port}`);
 });
 
-Gun({ web: server });
+Gun({
+  web: server,
+  peers: [
+    "https://nikahnama.onrender.com/gun",
+    "https://odd-stockings-newt.cyclic.app/gun",
+  ],
+});
