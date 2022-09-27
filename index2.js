@@ -5,8 +5,7 @@ import Cryptr from "cryptr";
 import fs from "fs";
 
 const app = express();
-const port = 5000;
-
+const port = 5001;
 
 app.use(cors());
 app.use(express.json());
@@ -22,6 +21,8 @@ fs.readFile("backup.nk", "utf8", (error, data) => {
   }
 });
 
+
+
 const backup = () => {
   let encrypted = encryption.encrypt(JSON.stringify(nikahNama.chain));
   fs.writeFileSync("backup.nk", encrypted, "utf8", (error, data) => {
@@ -34,21 +35,7 @@ app.get("/", (request, response) => {
 });
 
 app.get("/blockchain", (request, response) => {
-  response.json(nikahNama.chain);
-});
-
-app.post("/addBlock", (request, response) => {
-  if (nikahNama.addBlock(request.body)) {
-    backup();
-    response.json("added");
-  } else {
-    response.json("rejected");
-  }
-});
-
-app.post("/lookUp", (request, response) => {
-  const { person } = request.body;
-  response.json(nikahNama.search(person));
+  response.json(nikahNama);
 });
 
 app.get("/reset", (request, response) => {
@@ -56,5 +43,5 @@ app.get("/reset", (request, response) => {
 });
 
 const server = app.listen(port, () => {
-  console.log(`Nikahnama listening on port ${port}`);
+  console.log(`Nikahnama Backup listening on port ${port}`);
 });
