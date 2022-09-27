@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 const nikahNama = new Blockchain();
 const encryption = new Cryptr("nikahNamaKey");
 
-fs.readFile("backup.nk", "utf8", (error, data) => {
+fs.readFile("backup.txt", "utf8", (error, data) => {
   if (!error) {
     let decrypted = JSON.parse(encryption.decrypt(data));
     if (decrypted.length > 0) nikahNama.chain = decrypted;
@@ -24,7 +24,7 @@ fs.readFile("backup.nk", "utf8", (error, data) => {
 
 const backup = () => {
   let encrypted = encryption.encrypt(JSON.stringify(nikahNama.chain));
-  fs.writeFileSync("backup.nk", encrypted, "utf8", (error, data) => {
+  fs.writeFileSync("backup.txt", encrypted, "utf8", (error, data) => {
     if (error) console.log(error);
   });
 };
