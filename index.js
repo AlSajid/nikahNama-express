@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import Cryptr from "cryptr";
 import fs from "fs";
+import fetch from "node-fetch";
+import { parse } from 'node-html-parser';
 
 const app = express();
 const port = 5000;
@@ -31,6 +33,47 @@ const backup = () => {
 
 app.get("/", (request, response) => {
   response.json("hello world");
+});
+
+
+
+app.get("/nid", (request, response) => {
+  const url = "https://ldtax.gov.bd/citizen/nidCheck/";
+
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ nid: "7823714436", dob: "2002-03-05" }),
+  };
+
+  fetch(url, options)
+    .then(response => response.json())
+    .then(result => {
+
+      if (result.success === "true") {
+        const root = parse(result.data);
+        const data = {
+          name_of_national: root.querySelectorAll('td')[1].innerText,
+          name_of_father: root.querySelectorAll('td')[3].innerText,
+          name_of_mother: root.querySelectorAll('td')[5].innerText,
+          image: root.querySelectorAll('img')[0].getAttribute('src'),
+        }
+        response.json(data);
+      } else {
+        response.json(result.success);
+      }
+
+    })
+    .catch((error) => console.error("error:" + error));
+
+});
+
+
+
+app.get("/blockchain", (request, response) => {
+  response.json(nikahNama.chain);
 });
 
 app.get("/blockchain", (request, response) => {
