@@ -37,15 +37,15 @@ app.get("/", (request, response) => {
 
 
 
-app.get("/nid", (request, response) => {
+app.post("/nid", (request, response) => {
   const url = "https://ldtax.gov.bd/citizen/nidCheck/";
-
+  
   const options = {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify({ nid: "7823714436", dob: "2002-03-05" }),
+    body: JSON.stringify({ nid: request.body.nid, dob: request.body.dob }),
   };
 
   fetch(url, options)
@@ -90,6 +90,7 @@ app.post("/addBlock", (request, response) => {
 });
 
 app.post("/lookUp", (request, response) => {
+  // console.log(request.body);
   const { person } = request.body;
   response.json(nikahNama.search(person));
 });

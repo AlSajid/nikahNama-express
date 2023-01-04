@@ -58,6 +58,8 @@ export class Blockchain {
 
   search(nid) {
     return this.chain.filter((block) => {
+      console.log(block);
+
       return (
         block.data.groom.nid_number == nid || block.data.bride.nid_number == nid
       );
